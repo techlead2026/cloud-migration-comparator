@@ -55,3 +55,15 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Visual Studio tracking files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Database caches
+*.db
+*.db-shm
+*.db-wal
