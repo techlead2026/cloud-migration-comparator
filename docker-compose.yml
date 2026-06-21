@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  ingestion-layer:
+    image: migration-ingestion-api:latest
+    build:
+      context: ./service-ingestion-python
+      dockerfile: Dockerfile
+    container_name: migration_ingestion_container
+    ports:
+      - "8000:8000"
+    environment:
+      - TRANSLATOR_URL=http://translator-core:8080/api/v1/compare/storage
+    depends_on:
+      - translator-core
+
+  translator-core:
+    image: migration-translator-engine:latest
+    build:
+      context: ./service-translator-dotnet
+      dockerfile: Dockerfile
+    container_name: migration_translator_container
+    ports:
+      - "5000:8080"
+    environment:
+      - RedisConnection=cache-bus:6379
+      - MongoConnection=mongodb://root:pass@catalog-db:27017/
+    depends_on:
+      - cache-bus
+      - catalog-db
+
+  cache-bus:
+    image: redis:7.2-alpine
+    container_name: migration_redis_container
+    ports:
+      - "6379:6379"
+
+  catalog-db:
+    image: mongo:7.0
+    container_name: migration_mongo_container
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=pass

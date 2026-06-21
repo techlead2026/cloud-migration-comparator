@@ -1,6 +1,0 @@
-@CloudComparatorApi_HostAddress = http://localhost:5196
-
-GET {{CloudComparatorApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
